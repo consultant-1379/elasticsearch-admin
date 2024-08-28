@@ -1,0 +1,21 @@
+{
+    "is_enabled": true,
+    "compression": "gzip",
+    "file_format": "csv",
+    "frequency": [
+        "*/01 * * * *",
+        "every 1 minute",
+        1,
+        "minutes"
+    ],
+    "export_path": ["/ericsson/elect-export-path"],
+    "filesystem": "current",
+    "wild_card": null,
+    "query": {},
+    "retention": [
+        12,
+        "hours"
+    ],
+    "cron_name": "export_logs_every_1_minute_with_retention_12_hours"
+}
+

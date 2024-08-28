@@ -1,0 +1,4 @@
+####### python modules required for ELECT and Elasticsearch DBA Tool #############
+requests
+paramiko
+future

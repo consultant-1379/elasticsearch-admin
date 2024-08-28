@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+{{ include "elasticsearch-admin.metadata" . | indent 2 }}
+  name: {{ template "elasticsearch-admin.name" . }}
+  namespace: {{ .Release.Namespace }}
+rules:
+  - apiGroups:
+    - ""
+    resources:
+    - endpoints
+    verbs:
+    - get
+    - watch
+    - list
+

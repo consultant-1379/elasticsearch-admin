@@ -1,0 +1,144 @@
+#Default values for elasticsearch-admin.
+#This is a YAML-formatted file.
+#Declare variables to be passed into your templates.
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+
+  timezone: UTC
+securityPolicy:
+  rolename: elect
+service:
+  name: elect
+
+image:
+  name: elasticsearch-admin
+  tag: VERSION
+
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: IfNotPresent
+  pullSecret:
+  registry:
+    url:
+
+nameOverride: "elect"
+fullnameOverride: "elect"
+utilityName: "eric-enm-rwxpvc-elect"
+
+#####################################
+#For complete ELECT Functionality
+#####################################
+
+#electExecCommand:
+#  cmdUserChange: "su es_admin"
+#  cmdCd: "cd /opt/ericsson/elasticsearch/"
+#  cmdLogGeneration: "cat /var/log/messages"
+
+electCronJobSettings:
+  - oneMinuteCron:
+      name: elect-one-minute-cronjob
+      enabled: true
+      schedule: "*/1 * * * *"
+      exeCommand: "python command_script.py --policy one_mint"
+#  - fiveMinutesCron:
+#      name: elect-five-minutes-cronjob
+#      enabled: true
+#      schedule: "*/5 * * * *"
+#      policy: "five-mints-policy"
+#      exeCommand: "python command_script.py --policy five_mints"
+#  - fifteenMinutesCron:
+#      name: elect-fifteen-minutes-cronjob
+#      enabled: true
+#      schedule: "*/15 * * * *"
+#      policy: "fifteen-mints-policy"
+#      exeCommand: "python command_script.py --policy fifteen_mints"
+#  - oneHourCron:
+#      name: elect-one-hour-cronjob
+#      enabled: true
+#      schedule: "0 */1 * * *"
+#      policy: "one-hour-policy"
+#      exeCommand: "python command_script.py --policy one_hour"
+#  - threeHoursCron:
+#      name: elect-three-hours-cronjob
+#      enabled: true
+#      schedule: "0 */3 * * *"
+#      policy: "three-hours-policy"
+#      exeCommand: "python command_script.py --policy three_hours"
+#  - sixHoursCron:
+#      name: elect-six-hours-cronjob
+#      enabled: true
+#      schedule: "0 */6 * * *"
+#      policy: "six-hours-policy"
+#      exeCommand: "python command_script.py --policy six_hours"
+
+
+elect:
+  cronjob:
+    successfulJobHistoryLimit: 2
+    failedJobHistoryLimit: 4
+    concurrencyPolicy: Allow
+    resources:
+      limits:
+        cpu: 512m
+        memory: 1Gi
+      requests:
+        cpu: 512m
+        memory: 512Mi
+
+replicaCount: 1 #Only one replica for MVP elect
+
+
+#UpdateStrategy is required if more than 1 replica is used.
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+
+podAnnotations: {}
+
+resources:
+  elasticsearch-admin:
+    limits:
+      cpu: 512m
+      memory: 1Gi
+      ephemeral-storage:
+    requests:
+      cpu: 512m
+      memory: 512Mi
+      ephemeral-storage:
+  elect:
+    limits:
+      cpu: 512m
+      memory: 1Gi
+      ephemeral-storage:
+    requests:
+      cpu: 512m
+      memory: 512Mi
+      ephemeral-storage:
+
+nodeSelector: {}
+
+tolerations: []
+securityContext:
+  elasticsearchadmin:
+    allowPrivilegeEscalation: false
+    privileged: false
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    capabilities:
+      drop:
+      - ALL
+  elect:
+    allowPrivilegeEscalation: false
+    privileged: false
+    readOnlyRootFilesystem: false
+    runAsNonRoot: true
+    capabilities:
+      drop:
+      - ALL
